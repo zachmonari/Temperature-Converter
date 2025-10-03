@@ -47,6 +47,9 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+# ---------- Initialize Session State ----------
+if "conversion_log" not in st.session_state:
+    st.session_state.conversion_log = []
 
 # ---------- UI ----------
 st.image("https://cdn-icons-png.flaticon.com/512/1684/1684375.png", width=120)  # thermometer icon
@@ -73,28 +76,37 @@ temp = st.number_input("Enter the temperature value:", value=0.0)
 if st.button("Convert Temperature"):
     if conversion == "Celsius → Fahrenheit":
         result = celsius_to_fahrenheit(temp)
-        st.success(f"🔥 {temp} °C = {result:.2f} °F")
+        msg=f"🔥 {temp} °C = {result:.2f} °F"
 
     elif conversion == "Fahrenheit → Celsius":
         result = fahrenheit_to_celsius(temp)
-        st.success(f"❄️ {temp} °F = {result:.2f} °C")
+        msg=f"❄️ {temp} °F = {result:.2f} °C"
 
     elif conversion == "Celsius → Kelvin":
         result = celsius_to_kelvin(temp)
-        st.success(f"🌍 {temp} °C = {result:.2f} K")
+        msg=f"🌍 {temp} °C = {result:.2f} K"
 
     elif conversion == "Kelvin → Celsius":
         result = kelvin_to_celsius(temp)
-        st.success(f"🌡️ {temp} K = {result:.2f} °C")
+        msg=f"🌡️ {temp} K = {result:.2f} °C"
 
     elif conversion == "Fahrenheit → Kelvin":
         result = fahrenheit_to_kelvin(temp)
-        st.success(f"🌍 {temp} °F = {result:.2f} K")
+        msg=f"🌍 {temp} °F = {result:.2f} K"
 
     elif conversion == "Kelvin → Fahrenheit":
         result = kelvin_to_fahrenheit(temp)
-        st.success(f"🔥 {temp} K = {result:.2f} °F")
+        msg=f"🔥 {temp} K = {result:.2f} °F"
+#show result
+st.success(msg)
+# Save to history
+st.session_state.conversion_log.append(msg)
 
+# ---------- Show History ----------
+if st.session_state.conversion_log:
+    st.subheader("📝 Conversion History")
+    for i, entry in enumerate(st.session_state.conversion_log, start=1):
+        st.write(f"{i}. {entry}")
 # ---------- Footer ----------
 st.markdown("---")
 st.markdown(
